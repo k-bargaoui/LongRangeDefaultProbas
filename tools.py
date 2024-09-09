@@ -34,11 +34,12 @@ class Tools:
             self.proba_necula[i] = necula_result["default_probability"]
             self.proba_rostek[i] = rostek_result["default_probability"]
 
+            self.default_probas_df.loc[len(self.default_probas_df)] = ["Merton", m, self.proba_merton[i]]
             self.default_probas_df.loc[len(self.default_probas_df)] = ["Necula", m, self.proba_necula[i]]
             self.default_probas_df.loc[len(self.default_probas_df)] = ["Rostek", m, self.proba_rostek[i]]
-            self.default_probas_df.loc[len(self.default_probas_df)] = ["Merton", m, self.proba_merton[i]]
 
             #extract and store H_coeffs
+            self.hurst_coeffs .loc[len(self.hurst_coeffs )] = ["Merton", m, "N.A"]            
             self.hurst_coeffs .loc[len(self.hurst_coeffs )] = ["Necula", m, necula_result["H"]]
             self.hurst_coeffs .loc[len(self.hurst_coeffs )] = ["Rostek", m, rostek_result["H"]]
 
@@ -65,13 +66,22 @@ class Tools:
     def getSigmaValues(self):
         return self.sigma_df
     
-    def calibrateAndGetParameters(self):
+    def calibrateAndGeParamsDict(self):
         self.compute_proba_default()
         probas = self.getDefaultProbabilities()
         coeffs = self.getHurstCoeffs()
         mus = self.getMuValues()
         sigmas = self.getSigmaValues()
         return dict({"probas":probas, "coeffs":coeffs,"mus":mus,"sigmas":sigmas})
+    
+    def calibrateAndGetCombinedResults(self):
+        self.compute_proba_default()
+        p = self.getDefaultProbabilities()
+        h = self.getHurstCoeffs()
+        m = self.getMuValues()
+        s = self.getSigmaValues()
+        d=pd.merge(pd.merge(pd.merge(p, m, on=['Maturity', 'Model']), h, on=['Maturity', 'Model']), s, on=['Maturity', 'Model'])
+        return d
     
     def plotProbabilities(self):
         plot_probability(self.maturitySet, self.proba_merton, self.proba_necula, self.proba_rostek, self.ticker)
