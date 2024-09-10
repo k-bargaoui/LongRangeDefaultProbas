@@ -1,10 +1,17 @@
-from common_imports import plt
+from common_imports import plt, pd
 
-def plot_probability(maturity, proba_merton, proba_necula, proba_rostek, ticker):
+def plot_probability(dataframe, ticker):
     plt.figure()
-    plt.plot(maturity, proba_merton, label="Merton")
-    plt.plot(maturity, proba_necula, label="Necula")
-    plt.plot(maturity, proba_rostek, label="Rostek")
+
+    # Ensure 'Maturity' is treated as a numeric column
+    dataframe['Maturity'] = pd.to_numeric(dataframe['Maturity'], errors='coerce')
+
+    # Pivot the DataFrame
+    df_pivot = dataframe.pivot(index='Maturity', columns='Model', values='default proba')
+
+    # Plot the data
+    plt.figure()
+    df_pivot.plot(ax=plt.gca())  # Plot using the pivoted DataFrame
     plt.legend()
     plt.title(f"Default probability vs. maturity T for {ticker}")
     plt.xlabel("Maturity (T)")
