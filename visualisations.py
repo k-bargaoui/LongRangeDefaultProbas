@@ -1,19 +1,43 @@
 from common_imports import plt, pd
 
-def plot_probability(dataframe, ticker):
-    plt.figure()
+def plot_output(dataframe, value, specific_ticker=None):
+    """
+    Plot specified values as a function of maturity for given tickers.
 
-    # Ensure 'Maturity' is treated as a numeric column
-    dataframe['Maturity'] = pd.to_numeric(dataframe['Maturity'], errors='coerce')
+    Parameters:
+    - dataframe: DataFrame
+        The DataFrame containing the data to plot, with 'Ticker', 'Maturity', and 'Model' columns.
+    - value: str
+        The column name in the DataFrame to plot.
+    - specific_ticker: str, optional
+        The ticker to filter the DataFrame (default is None, which plots all tickers).
+    """
+    # Determine which tickers to plot
+    tickers = [specific_ticker] if specific_ticker else dataframe['Ticker'].unique()
 
-    # Pivot the DataFrame
-    df_pivot = dataframe.pivot(index='Maturity', columns='Model', values='default proba')
+    for ticker in tickers:
+        # Filter DataFrame by ticker
+        df_ticker = dataframe[dataframe['Ticker'] == ticker].copy()
 
-    # Plot the data
-    plt.figure()
-    df_pivot.plot(ax=plt.gca())  # Plot using the pivoted DataFrame
-    plt.legend()
-    plt.title(f"Default probability vs. maturity T for {ticker}")
-    plt.xlabel("Maturity (T)")
-    plt.ylabel("Probability")
-    plt.show()
+        # Ensure Maturity is numeric
+        df_ticker['Maturity'] = pd.to_numeric(df_ticker['Maturity'], errors='coerce')
+
+        # Pivot the DataFrame for plotting
+        df_pivot = df_ticker.pivot(index='Maturity', columns='Model', values=value)
+
+        # Create the plot
+        plt.figure(figsize=(5, 4))
+
+        # Plot each model's values
+        for model in df_pivot.columns:
+            plt.plot(df_pivot.index, df_pivot[model], label=model)
+
+        # Customize plot aesthetics
+        plt.title(f'{value} as a Function of Maturity for {ticker}')
+        plt.xlabel('Maturity (years)')
+        plt.ylabel(value)
+        plt.legend(title='Model')
+        plt.grid(True)
+
+        # Show the plot
+        plt.show()

@@ -1,25 +1,32 @@
-class CalibrationsModels:
+class CalibrationModel:
     def __init__(self, ticker, market_cap, debt, T, frequency=252, rf=0, epsilon=1e-5):
         """
-        Initialize the base calibration model with key financial and market parameters.
+        Initialize the calibration model with key financial and market parameters.
         
         Parameters:
-        - ticker: str, stock ticker of the company
-        - market_cap: DataFrame, historical market capitalization data (with ticker as column)
-        - debt: DataFrame, company debt information (with ticker as column)
-        - T: float, time to maturity (in years)
-        - frequency: int, optional, default=252 (trading days in a year)
-        - rf: float, optional, default=0 (risk-free rate)
-        - epsilon: float, optional, default=1e-5 (tolerance level for calibration)
+        - ticker: str
+            Stock ticker of the company.
+        - market_cap: DataFrame
+            Historical market capitalization data (with ticker as column).
+        - debt: DataFrame
+            Company debt information (with ticker as column).
+        - T: float
+            Time to maturity (in years).
+        - frequency: int, optional
+            Trading days in a year (default is 252).
+        - rf: float, optional
+            Risk-free rate (default is 0).
+        - epsilon: float, optional
+            Tolerance level for calibration (default is 1e-5).
         """
         self.ticker = ticker
-        self.market_cap = market_cap
-        self.debt = debt
+        self.market_cap = market_cap[ticker]
+        self.debt = debt[ticker]
         self.T = T
         self.frequency = frequency
         self.rf = rf
         self.epsilon = epsilon
         
-        # Extract the company's initial debt and market capitalization data
-        self.company_debt = debt[ticker].iloc[0]  # First row of the ticker's debt column
-        self.company_market_cap = market_cap[ticker]  # Full column for the market cap of the ticker
+        # Extracting company debt and market cap
+        self.company_debt = self.debt.iloc[0]
+        self.company_market_cap = self.market_cap
