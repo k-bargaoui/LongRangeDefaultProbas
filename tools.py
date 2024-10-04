@@ -5,7 +5,31 @@ from rostek import Rostek
 from visualisations import plot_output
 
 class Tools:
+    """
+    A class to calibrate financial models and combine results for different tickers and maturities.
+
+    Attributes:
+        market_cap (DataFrame): Historical market capitalization data.
+        debt (DataFrame): Company debt information.
+        ticker_list (list): List of tickers for calibration.
+        maturity_set (list): List of maturities for calibration (default: [1, 5, 10]).
+        hurst_coeffs_df (DataFrame): DataFrame to store H coefficients.
+        default_probas_df (DataFrame): DataFrame to store default probabilities.
+        mu_df (DataFrame): DataFrame to store mu values.
+        sigma_df (DataFrame): DataFrame to store sigma values.
+        results (DataFrame): Combined results DataFrame.
+    """
+    
     def __init__(self, market_cap, debt, ticker_list, maturity_set=[1, 5, 10]):
+        """
+        Initializes the Tools class with market cap, debt, and ticker information.
+
+        Parameters:
+            market_cap (DataFrame): Historical market capitalization data.
+            debt (DataFrame): Company debt information.
+            ticker_list (list): List of tickers for calibration.
+            maturity_set (list): List of maturities for calibration.
+        """
         self.market_cap = market_cap
         self.debt = debt
         self.ticker_list = ticker_list
@@ -17,6 +41,12 @@ class Tools:
         self.results = None
 
     def calibrate_and_combine_results(self, ticker_list):
+        """
+        Calibrates the financial models for the given tickers and combines the results.
+
+        Parameters:
+            ticker_list (list): List of tickers to calibrate.
+        """
         new_default_probas = []
         new_mu_values = []
         new_sigma_values = []
@@ -97,24 +127,62 @@ class Tools:
         self.results = merged_df
 
     def get_default_probabilities(self):
+        """
+        Returns the default probabilities DataFrame.
+
+        Returns:
+            DataFrame: The default probabilities DataFrame.
+        """
         return self.default_probas_df
 
     def get_hurst_coeffs(self):
+        """
+        Returns the Hurst coefficients DataFrame.
+
+        Returns:
+            DataFrame: The Hurst coefficients DataFrame.
+        """
         return self.hurst_coeffs_df
 
     def get_mu_values(self):
+        """
+        Returns the mu values DataFrame.
+
+        Returns:
+            DataFrame: The mu values DataFrame.
+        """
         return self.mu_df
 
     def get_sigma_values(self):
+        """
+        Returns the sigma values DataFrame.
+
+        Returns:
+            DataFrame: The sigma values DataFrame.
+        """
         return self.sigma_df
 
     def get_results(self):
+        """
+        Returns the combined results DataFrame.
+
+        Returns:
+            DataFrame or None: The combined results DataFrame or None if no results are found.
+        """
         if self.results is None:
             print("No results found from previous run, recalibration needed.")
+            return None
         else:    
             return self.results
         
     def dump_results(self, window, style):
+        """
+        Dumps the results to CSV files in the specified directory.
+
+        Parameters:
+            window (str): The time window for the results (e.g., '1Y').
+            style (str): The style of the results (e.g., 'stressed' or 'non_stressed').
+        """
         if not os.path.exists('Calibration_Results'):
             os.makedirs('Calibration_Results')
         
@@ -125,15 +193,40 @@ class Tools:
         self.hurst_coeffs_df.to_csv(os.path.join('Calibration_Results', f'H_{window}_{style}.csv'), sep=";")
 
     # Plotters         
-    
+
     def plot_probabilities(self, specific_ticker=None):
+        """
+        Plots the default probabilities for the specified ticker or all tickers.
+
+        Parameters:
+            specific_ticker (str, optional): The specific ticker to plot. If None, plots for all tickers.
+        """
         plot_output(self.get_default_probabilities(), 'DP(%)', specific_ticker)
 
     def plot_hurst_coeffs(self, specific_ticker=None):
+        """
+        Plots the Hurst coefficients for the specified ticker or all tickers.
+
+        Parameters:
+            specific_ticker (str, optional): The specific ticker to plot. If None, plots for all tickers.
+        """
         plot_output(self.get_hurst_coeffs(), 'H', specific_ticker) 
 
     def plot_sigma(self, specific_ticker=None):
+        """
+        Plots the sigma values for the specified ticker or all tickers.
+
+        Parameters:
+            specific_ticker (str, optional): The specific ticker to plot. If None, plots for all tickers.
+        """
         plot_output(self.get_sigma_values(), 'Sigma', specific_ticker)
 
     def plot_mu(self, specific_ticker=None):
-        plot_output(self.get_mu_values(), 'Mu', specific_ticker)
+        """
+        Plots the mu values for the specified ticker or all tickers.
+
+        Parameters:
+            specific_ticker (str, optional): The specific ticker to
+        """
+        plot_output(self.get_mu_values(), 'Mu', specific_ticker) 
+
