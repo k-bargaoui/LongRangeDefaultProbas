@@ -44,6 +44,7 @@ This project relies on the following Python packages:
 - `pandas`
 - `matplotlib`
 - `scipy`
+- `scikit-learn`
 
 The `requirements.txt` file includes all necessary libraries, and you can install them using:
 
@@ -69,7 +70,7 @@ market_cap_data = ...  # Load your data here
 debt_data = ...        # Load your data here
 
 # Initialize and calibrate the Merton model
-merton_model = Merton(ticker='AAPL', market_cap=market_cap_data, debt=debt_data, T=5)
+merton_model = Merton(ticker='PIA IM Equity', market_cap=market_cap_data, debt=debt_data, T=5)
 result = merton_model.calibrate()
 
 # Access results
@@ -86,7 +87,7 @@ The Necula model provides a different methodology for calculating default probab
 from necula import Necula
 
 # Initialize and calibrate the Necula model
-necula_model = Necula(ticker='AAPL', market_cap=market_cap_data, debt=debt_data, T=5)
+necula_model = Necula(ticker='PIA IM Equity', market_cap=market_cap_data, debt=debt_data, T=5)
 result = necula_model.calibrate()
 
 # Access results
@@ -103,7 +104,7 @@ The Rostek model applies an alternative approach for assessing default probabili
 from rostek import Rostek
 
 # Initialize and calibrate the Rostek model
-rostek_model = Rostek(ticker='AAPL', market_cap=market_cap_data, debt=debt_data, T=5)
+rostek_model = Rostek(ticker='PIA IM Equity', market_cap=market_cap_data, debt=debt_data, T=5)
 result = rostek_model.calibrate()
 
 # Access results
@@ -124,8 +125,8 @@ market_cap_data = ...  # Load your data here
 debt_data = ...        # Load your data here
 
 # Initialize Tools with your market data and ticker list
-tools = Tools(market_cap=market_cap_data, debt=debt_data, ticker_list=['AAPL', 'MSFT'])
-tools.calibrate_and_combine_results(['AAPL', 'MSFT'])
+tools = Tools(market_cap=market_cap_data, debt=debt_data, ticker_list=['PIA IM Equity', 'CO FP Equity'])
+tools.calibrate_and_combine_results(['PIA IM Equity', 'CO FP Equity'])
 
 # Get combined results
 results = tools.get_results()
@@ -140,10 +141,10 @@ The project includes visualization functions to plot the calculated probabilitie
 from visualisations import plot_output
 
 # Visualize default probabilities for a specific ticker
-plot_output(dataframe=results, value='DP(%)', specific_ticker='AAPL')
+plot_output(dataframe=results, value='DP(%)', specific_ticker='PIA IM Equity')
 
 # Visualize Hurst coefficients
-tools.plot_hurst_coeffs(specific_ticker='AAPL')
+tools.plot_hurst_coeffs(specific_ticker='PIA IM Equity')
 ```
 
 ## Examples
@@ -162,8 +163,8 @@ market_cap_data = pd.read_excel('Data/Data_issuers.xlsx', sheet_name='Mod Market
 debt_data = pd.read_excel('Data/Data_issuers.xlsx', sheet_name='Gross Debt', nrows=1)
 
 # Initialize Tools and calibrate models
-tools = Tools(market_cap=market_cap_data, debt=debt_data, ticker_list=['AAPL', 'MSFT'])
-tools.calibrate_and_combine_results(['AAPL', 'MSFT'])
+tools = Tools(market_cap=market_cap_data, debt=debt_data, ticker_list=['PIA IM Equity', 'CO FP Equity'])
+tools.calibrate_and_combine_results(['PIA IM Equity', 'CO FP Equity'])
 
 # Get and visualize results
 results = tools.get_results()
