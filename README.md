@@ -15,6 +15,7 @@ This project implements various models to calculate long-range default probabili
 - [Tools](#tools)
 - [Visualizations](#visualizations)
 - [Examples](#examples)
+- [Documentation](#documentation)
 - [Contributing](#contributing)
 - [License](#license)
 
