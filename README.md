@@ -170,6 +170,9 @@ tools.calibrate_and_combine_results(['PIA IM Equity', 'CO FP Equity'])
 results = tools.get_results()
 plot_output(dataframe=results, value='DP(%)')
 ```
+## Documentation
+
+An HTML page containing the description of all functions can be found in "lib_doc.html"
 
 ## Contributing
 
