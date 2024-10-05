@@ -177,20 +177,52 @@ class Tools:
         
     def dump_results(self, window, style):
         """
-        Dumps the results to CSV files in the specified directory.
+        Dumps the results to CSV files in the specified subdirectories.
 
         Parameters:
             window (str): The time window for the results (e.g., '1Y').
             style (str): The style of the results (e.g., 'stressed' or 'non_stressed').
         """
-        if not os.path.exists('Calibration_Results'):
-            os.makedirs('Calibration_Results')
+        base_dir = 'Calibration_Results'
         
-        self.results.to_csv(os.path.join('Calibration_Results', f'full_results_{window}_{style}.csv'), sep=";")
-        self.default_probas_df.to_csv(os.path.join('Calibration_Results', f'default_proba_{window}_{style}.csv'), sep=";")
-        self.sigma_df.to_csv(os.path.join('Calibration_Results', f'sigma_{window}_{style}.csv'), sep=";")
-        self.mu_df.to_csv(os.path.join('Calibration_Results', f'mu_{window}_{style}.csv'), sep=";")
-        self.hurst_coeffs_df.to_csv(os.path.join('Calibration_Results', f'H_{window}_{style}.csv'), sep=";")
+        # Define subdirectories
+        subdirs = {
+            'global_results': os.path.join(base_dir, 'global results'),
+            'default_probabilities': os.path.join(base_dir, 'default probabilities'),
+            'mu': os.path.join(base_dir, 'Mu'),
+            'sigma': os.path.join(base_dir, 'Sigma'),
+            'hurst_coefficients': os.path.join(base_dir, 'hurst coefficients')
+        }
+        
+        # Create subdirectories if they don't exist
+        for subdir in subdirs.values():
+            os.makedirs(subdir, exist_ok=True)
+        
+        # Save the full results in 'global results' folder
+        self.results.to_csv(
+            os.path.join(subdirs['global_results'], f'full_results_{window}_{style}.csv'), sep=";"
+        )
+        
+        # Save default probabilities in 'default probabilities' folder
+        self.default_probas_df.to_csv(
+            os.path.join(subdirs['default_probabilities'], f'default_proba_{window}_{style}.csv'), sep=";"
+        )
+        
+        # Save Mu in 'Mu' folder
+        self.mu_df.to_csv(
+            os.path.join(subdirs['mu'], f'mu_{window}_{style}.csv'), sep=";"
+        )
+        
+        # Save Sigma in 'Sigma' folder
+        self.sigma_df.to_csv(
+            os.path.join(subdirs['sigma'], f'sigma_{window}_{style}.csv'), sep=";"
+        )
+        
+        # Save Hurst coefficients in 'hurst coefficients' folder
+        self.hurst_coeffs_df.to_csv(
+            os.path.join(subdirs['hurst_coefficients'], f'H_{window}_{style}.csv'), sep=";"
+        )
+
 
     # Plotters         
 
