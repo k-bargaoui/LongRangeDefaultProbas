@@ -173,7 +173,7 @@ plot_output(dataframe=results, value='DP(%)')
 ```
 ## Documentation
 
-An HTML page containing the description of all functions can be found in "lib_doc.html"
+An HTML page containing the description of all functions can be found in docs/index.html
 
 ## Contributing
 
